@@ -42,7 +42,7 @@ Object.keys(db).forEach(modelName => {
     }
 });
 
-sequelize.sync({ force: true }).then(() => {
+sequelize.sync({ force: false }).then(() => {
     console.log("Re-sync is completed.");
 });
 
