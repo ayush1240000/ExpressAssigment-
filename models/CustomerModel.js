@@ -12,6 +12,7 @@ module.exports = (sequelize, DataTypes) => {
                 model: 'users',
                 key: 'userid',
             },
+            allowNull:false
         },
         deletedAt: {
             type: DataTypes.DATE,

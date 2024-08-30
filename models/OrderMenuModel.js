@@ -6,14 +6,16 @@ module.exports = (sequelize, DataTypes) => {
             references: {
                 model: 'userorders', // Name of the table to reference
                 key: 'orderid'       // Key in the referenced table
-            }
+            },
+            allowNull:false
         },
         menuid: {
             type: DataTypes.INTEGER,
             references: {
                 model: 'menus',      // Name of the table to reference
                 key: 'menuid'        // Key in the referenced table
-            }
+            },
+            allowNull:false
         },
         quantity: {
             type: DataTypes.INTEGER,

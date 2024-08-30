@@ -17,8 +17,10 @@ module.exports = (sequelize, DataTypes) => {
             references: {
                 model: 'employees',  
                 key: 'employeeid'
-            }
-        },deletedAt: {
+            },
+            allowNull: false
+        },
+        deletedAt: {
             type: DataTypes.DATE,
             allowNull: true,
         }

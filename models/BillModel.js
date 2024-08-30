@@ -13,6 +13,7 @@ module.exports = (sequelize, DataTypes) => {
         status: {
             type: DataTypes.ENUM('paid', 'unpaid'),
             defaultValue: 'unpaid',
+            allowNull:false
         },
         created_at: {
             type: DataTypes.DATE,
@@ -28,6 +29,7 @@ module.exports = (sequelize, DataTypes) => {
                 model: 'customers',
                 key: 'customerid',
             },
+            allowNull:false
         },
         tableno: {
             type: DataTypes.INTEGER,
@@ -35,6 +37,7 @@ module.exports = (sequelize, DataTypes) => {
                 model: 'dinnertables',
                 key: 'tableno',
             },
+            allowNull:false
         },
         employeeid: {
             type: DataTypes.INTEGER,
@@ -42,6 +45,7 @@ module.exports = (sequelize, DataTypes) => {
                 model: 'employees',
                 key: 'employeeid',
             },
+            allowNull:false
         },
         deletedAt: {
             type: DataTypes.DATE,

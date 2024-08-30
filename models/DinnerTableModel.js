@@ -16,14 +16,16 @@ module.exports = (sequelize, DataTypes) => {
             references: {
                 model: 'customers',   // Name of the table to reference
                 key: 'customerid'     // Key in the referenced table
-            }
+            },
+            allowNull:false
         },
         employeeid: {
             type: DataTypes.INTEGER,
             references: {
                 model: 'employees',   // Name of the table to reference
                 key: 'employeeid'     // Key in the referenced table
-            }
+            },
+            allowNull:false
         },
         deletedAt: {
             type: DataTypes.DATE,

@@ -1,26 +1,4 @@
 
-module.exports = (sequelize,DataTypes)=>{
-    const Employee = sequelize.define("employee",{
-        employeeid :{
-            type : DataTypes.INTEGER,
-            autoincrement : true,
-            primaryKey: true
-        },
-        userid :{
-            type:DataTypes.INTEGER,
-            references :{
-                model: 'users',
-                key: 'userid'
-            }
-        },
-        role :{
-            type : DataTypes.ENUM('manager','waiter','cleaner'),
-            allowNull : false
-        }
-    })
-    return Employee;
-}
-
 module.exports = (sequelize, DataTypes) => {
     const Employee = sequelize.define("employee", {
         employeeid: {
@@ -34,6 +12,7 @@ module.exports = (sequelize, DataTypes) => {
                 model: 'users',
                 key: 'userid',
             },
+            allowNull:false
         },
         role: {
             type: DataTypes.ENUM('manager', 'waiter', 'cleaner'),

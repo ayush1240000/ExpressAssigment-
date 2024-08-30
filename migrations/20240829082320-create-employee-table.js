@@ -17,7 +17,7 @@ module.exports = {
         },
         onUpdate: 'CASCADE',
         onDelete: 'SET NULL',
-        allowNull: true,
+        allowNull: false,
       },
       role: {
         type: Sequelize.ENUM('manager', 'waiter', 'cleaner'),

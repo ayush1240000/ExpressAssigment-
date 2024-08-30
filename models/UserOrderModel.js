@@ -11,8 +11,10 @@ module.exports = (sequelize, DataTypes) => {
             references: {
                 model: 'customers',  // Name of the table to reference
                 key: 'customerid'    // Key in the referenced table
-            }
-        },deletedAt: {
+            },
+            allowNull:false
+        },
+        deletedAt: {
             type: DataTypes.DATE,
             allowNull: true,
         }
