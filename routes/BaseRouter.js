@@ -4,11 +4,11 @@ const createRouter = (controller) => {
     const router = express.Router();
 
     router.post('/add', controller.add);
-    router.get('/:id', controller.getAll);
+    router.get('/', controller.getAll);
     router.get('/:id', controller.getOne);
     router.delete('/:id', controller.delete);
     router.put('/:id', controller.update);
-    router.get('filter/id',controller.filter);
+    // router.get('/id',controller.searc);
 
     return router;
 };

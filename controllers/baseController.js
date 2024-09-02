@@ -1,52 +1,60 @@
-const {User} = require('../models')
-const { Op } = require('sequelize');
+
+// const {}  = require('../models');
 const TransactionService = require('../services/transactionService');
+const getPagination = require('../utils/pagination');
+const getSorting = require('../utils/sorting'); // Import sorting utility
 const errorCodes = require('../services/statuscode');
-
-
+const {Op}=require('sequelize')
 
 const createController = (service, DTO) => ({
     add: async (req, res) => {
         try {
             const result = await TransactionService.executeTransaction(async (transaction) => {
                 const dto = new DTO(req.body);
-                const item = await service.add(dto, transaction);
-                return item;
+                return await service.add(dto, transaction);
             });
-            res.status(200).send(result);
+            res.status(200).send(errorCodes.done);
         } catch (error) {
-            res.status(500).send(errorCodes.Cerror );
+            res.status(500).send( errorCodes.invalidentery);
         }
     },
 
-
-    getAll: async (req, res) => {
+  getAll: async (req, res) => {
         try {
+            // Parsing page and size from query parameters
             const pageAsNumber = Number.parseInt(req.query.page);
             const sizeAsNumber = Number.parseInt(req.query.size);
-            let page = 0;
-            if (!Number.isNaN(pageAsNumber) && pageAsNumber > 0) {
-                page = pageAsNumber;
-            }
+            const page = !Number.isNaN(pageAsNumber) && pageAsNumber > 0 ? pageAsNumber : 1;
+            const size = !Number.isNaN(sizeAsNumber) && sizeAsNumber > 0 && sizeAsNumber < 100 ? sizeAsNumber : 10;
+            const { limit, offset } = getPagination(page, size);
 
-            let size = 2;
-            if (!Number.isNaN(sizeAsNumber) && sizeAsNumber > 0 && sizeAsNumber < 10) {
-                size = sizeAsNumber;
-            }
+            // Building search parameters based on query
+            const searchTerm = req.query.search || '';
+            const searchParams = searchTerm ? {
+                [Op.or]: [
+                    { fname: { [Op.like]: `%${searchTerm}%` } },
+                    // { description: { [Op.like]: `%${searchTerm}%` } }
+                ]
+            } : {};
 
-            const users = await User.findAndCountAll({
-               
-                limit: size,
-                offset: page * size,
-        });
-            console.log(users.rows);
-            res.send({
-                content: users.rows,
-                totalPages: Math.ceil(users.count / size),
+            // Building sorting options
+            const { sortField, sortOrder } = req.query;
+            const sortOptions = [[sortField || 'createdAt', (sortOrder || 'ASC').toUpperCase()]];
+
+            // Fetching results
+            const results = await service.search(searchParams, {
+                limit,
+                offset,
+                order: sortOptions,
             });
 
+            // Sending response
+            res.send({
+                content: results.rows,
+                totalPages: Math.ceil(results.count / size),
+            });
         } catch (error) {
-            res.status(500).send({ message: 'Failed to retrieve items', details: error.message });
+            res.status(500).send(errorCodes.missingentery);
         }
     },
 
@@ -57,10 +65,10 @@ const createController = (service, DTO) => ({
             if (item) {
                 res.status(200).send(item);
             } else {
-                res.status(404).send({ message: `${service.name} not found` });
+                res.status(404).send(errorCodes.missingentery);
             }
         } catch (error) {
-            res.status(500).send({ message: 'Failed to retrieve item', details: error.message });
+            res.status(500).send(errorCodes.missingentery);
         }
     },
 
@@ -68,14 +76,13 @@ const createController = (service, DTO) => ({
         try {
             const result = await TransactionService.executeTransaction(async (transaction) => {
                 const id = req.params.id;
-                const deletionResult = await service.delete(id, transaction);
-                return deletionResult;
+                return await service.delete(id, transaction);
             });
 
             if (result) {
-                res.status(200).send({ message: `${service.name} deleted successfully` });
+                res.status(200).send(errorCodes.deleted);
             } else {
-                res.status(404).send({ message: `${service.name} not found` });
+                res.status(404).send(errorCodes.missingentery);
             }
         } catch (error) {
             res.status(500).send({ message: 'Failed to delete item', details: error.message });
@@ -92,30 +99,16 @@ const createController = (service, DTO) => ({
             });
 
             if (result > 0) {
-                res.status(200).send({ message: `${service.name} updated successfully` });
+                res.status(200).send(errorCodes.updated);
             } else {
-                res.status(404).send({ message: `${service.name} not found` });
+                res.status(404).send(errorCodes.missingentery);
             }
         } catch (error) {
             res.status(500).send({ message: 'Failed to update item', details: error.message });
         }
     },
 
-    filter : async(req,res)=>{
-        try{
 
-            const id = req.query;
-            const item = await service.filter(req.query);
-            if (item) {
-                res.status(200).send(item);
-            } else {
-                res.status(404).send({ message: `${service.name} not found` });
-            }
-        } catch (error) {
-            res.status(500).send({ message: 'Failed to retrieve item', details: error.message });
-        
-        }
-    }
 });
 
 module.exports = createController;

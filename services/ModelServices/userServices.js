@@ -11,6 +11,12 @@ class UserService extends BaseService {
     async getById(userid) {
         return this.model.findOne({ where: {userid} });
     }
+    
+
+    async delete(userid) {
+        return this.model.destroy({ where: {userid} });
+    }
+
 }
 
 module.exports = new UserService();
