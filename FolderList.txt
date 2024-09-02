@@ -1,0 +1,13 @@
+.gitignore
+config
+controllers
+dto
+FolderList.txt
+migrations
+models
+node_modules
+package-lock.json
+package.json
+routes
+server.js
+services

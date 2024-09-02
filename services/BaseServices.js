@@ -8,10 +8,10 @@ class BaseService {
     }
 
     async getAll() {
-        return this.model.findAll();
+        return this.model.findAndCountAll();
     }
 
-    async getOne(id) {
+    async getById(id) {
         return this.model.findOne({ where: {id} });
     }
 
@@ -21,6 +21,10 @@ class BaseService {
 
     async update(id, updateData, transaction) {
         return this.model.update(updateData, { where: { id }, transaction });
+    }
+    
+    async filter(){
+        return this.model.find({where : id});
     }
 }
 

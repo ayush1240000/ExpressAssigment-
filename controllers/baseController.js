@@ -1,6 +1,9 @@
-
-const TransactionService = require('../services/TransactionService');
+const {User} = require('../models')
+const { Op } = require('sequelize');
+const TransactionService = require('../services/transactionService');
 const errorCodes = require('../services/statuscode');
+
+
 
 const createController = (service, DTO) => ({
     add: async (req, res) => {
@@ -16,10 +19,32 @@ const createController = (service, DTO) => ({
         }
     },
 
+
     getAll: async (req, res) => {
         try {
-            const items = await service.getAll();
-            res.status(200).send(items);
+            const pageAsNumber = Number.parseInt(req.query.page);
+            const sizeAsNumber = Number.parseInt(req.query.size);
+            let page = 0;
+            if (!Number.isNaN(pageAsNumber) && pageAsNumber > 0) {
+                page = pageAsNumber;
+            }
+
+            let size = 2;
+            if (!Number.isNaN(sizeAsNumber) && sizeAsNumber > 0 && sizeAsNumber < 10) {
+                size = sizeAsNumber;
+            }
+
+            const users = await User.findAndCountAll({
+               
+                limit: size,
+                offset: page * size,
+        });
+            console.log(users.rows);
+            res.send({
+                content: users.rows,
+                totalPages: Math.ceil(users.count / size),
+            });
+
         } catch (error) {
             res.status(500).send({ message: 'Failed to retrieve items', details: error.message });
         }
@@ -27,7 +52,7 @@ const createController = (service, DTO) => ({
 
     getOne: async (req, res) => {
         try {
-            const id = req.params.id;
+            const id = req.params.userid;
             const item = await service.getById(id);
             if (item) {
                 res.status(200).send(item);
@@ -75,6 +100,22 @@ const createController = (service, DTO) => ({
             res.status(500).send({ message: 'Failed to update item', details: error.message });
         }
     },
+
+    filter : async(req,res)=>{
+        try{
+
+            const id = req.query;
+            const item = await service.filter(req.query);
+            if (item) {
+                res.status(200).send(item);
+            } else {
+                res.status(404).send({ message: `${service.name} not found` });
+            }
+        } catch (error) {
+            res.status(500).send({ message: 'Failed to retrieve item', details: error.message });
+        
+        }
+    }
 });
 
 module.exports = createController;

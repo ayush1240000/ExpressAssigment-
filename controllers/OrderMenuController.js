@@ -1,6 +1,6 @@
 const OrderMenuService = require('../services/ModelServices/ordermenuServices');
 const OrderMenuDTO = require('../dto/OrderMenuDTO');
-const createController = require('./ControllerFactory');
+const createController = require('./baseController');
 
 const OrderMenuController = createController(OrderMenuService, OrderMenuDTO);
 

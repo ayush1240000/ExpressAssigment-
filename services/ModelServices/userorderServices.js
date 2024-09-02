@@ -1,7 +1,7 @@
 
 const { UserOrder } = require('../../models');
 
-const BaseService = require('../BaseServices');
+const BaseService = require('../baseServices');
 
 class UserOrderService extends BaseService {
     constructor() {

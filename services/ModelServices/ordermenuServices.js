@@ -1,7 +1,7 @@
 
 const { OrderMenu } = require('../../models');
 
-const BaseService = require('../BaseServices');
+const BaseService = require('../baseServices');
 
 class OrderMenuService extends BaseService {
     constructor() {

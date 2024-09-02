@@ -1,11 +1,15 @@
 
 const { User } = require('../../models');
 
-const BaseService = require('../BaseServices');
+const BaseService = require('../baseServices');
 
 class UserService extends BaseService {
     constructor() {
         super(User);
+    }
+    
+    async getById(userid) {
+        return this.model.findOne({ where: {userid} });
     }
 }
 
